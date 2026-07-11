@@ -41,7 +41,6 @@ body {
   @apply m-0 bg-bg text-text font-mono;
 }
 
-/* smooth color/bg/border transitions on interactive elements */
 a,
 button,
 [role="button"] {
