@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #060907;
+  --color-bg-elevated: #0b100d;
+  --color-surface: #0e1512;
+  --color-surface-hover: #131c17;
+
+  --color-border: #1f2c24;
+  --color-border-strong: #2c3e33;
+
+  --color-primary: #7fe03a;
+  --color-primary-dim: #4e8f26;
+  --color-primary-active: color-mix(in srgb, var(--color-primary) 9%, transparent);
+  --color-secondary: #ff2e88;
+  --color-secondary-dim: #b01d5f;
+  --color-accent: #35e5d4;
+
+  --color-text: #dde9dc;
+  --color-muted: #63776a;
+
+  --color-alive: #5be06b;
+  --color-dead: #ff4a4a;
+  --color-unknown: #8a9992;
+
+  --shadow-primary: 0 0 24px -6px var(--color-primary);
+  --shadow-primary-soft: 0 0 20px -12px var(--color-primary);
+
+  --font-mono:
+    "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  @apply m-0 bg-bg text-text font-mono;
+}
+
+/* smooth color/bg/border transitions on interactive elements */
+a,
+button,
+[role="button"] {
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  a,
+  button,
+  [role="button"] {
+    transition: none;
+  }
+}
+
+/* spinning portal logo mark */
+.portal-mark {
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--color-accent),
+    var(--color-primary),
+    var(--color-primary-dim),
+    var(--color-accent)
+  );
+  box-shadow:
+    0 0 14px rgb(127 224 58 / 0.5),
+    inset 0 0 6px #000;
+  animation: portal-spin 8s linear infinite;
+}
+.portal-mark::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: var(--color-bg);
+}
+@keyframes portal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-mark {
+    animation: none;
+  }
+}
