@@ -7,11 +7,15 @@
   --color-surface-hover: #131c17;
 
   --color-border: #1f2c24;
-  --color-border-strong: #2c3e33;
+  --color-border-strong: #314438;
 
   --color-primary: #7fe03a;
   --color-primary-dim: #4e8f26;
-  --color-primary-active: color-mix(in srgb, var(--color-primary) 9%, transparent);
+  --color-primary-active: color-mix(
+    in srgb,
+    var(--color-primary) 9%,
+    transparent
+  );
   --color-secondary: #ff2e88;
   --color-secondary-dim: #b01d5f;
   --color-accent: #35e5d4;
@@ -19,16 +23,40 @@
   --color-text: #dde9dc;
   --color-muted: #63776a;
 
-  --color-alive: #5be06b;
+  --color-alive: #91ee4d;
   --color-dead: #ff4a4a;
   --color-unknown: #8a9992;
 
   --shadow-primary: 0 0 24px -6px var(--color-primary);
   --shadow-primary-soft: 0 0 20px -12px var(--color-primary);
 
+  --animate-blink: blink 1s steps(1) infinite;
+  --animate-pulse-dot: pulse-dot 1.8s ease-in-out infinite;
+
   --font-mono:
     "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.18;
+  }
+}
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-blink,
+  .animate-pulse-dot {
+    animation: none;
+  }
 }
 
 *,

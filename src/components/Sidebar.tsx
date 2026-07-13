@@ -25,7 +25,7 @@ export default function Sidebar() {
         <SidebarLink to="/favoritos" count={0} name="Favoritos" />
       </nav>
 
-      <footer className="hidden lg:flex flex-col mt-auto pt-4 border-t border-border text-[11px] tracking-wide">
+      <footer className="hidden lg:flex flex-col mt-auto pt-4 border-t border-border-strong text-[11px] tracking-wide">
         <div className="flex justify-between py-1 text-muted">
           <span>DIMENSÃO</span>
           <span className="text-primary">C-137</span>
