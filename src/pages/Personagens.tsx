@@ -3,8 +3,9 @@ import EntityCard from "../components/EntityCard";
 import StatusDot from "../components/StatusDot";
 import SearchBar from "../components/SearchBar";
 import { useCharacters } from "../hooks/useCharacters";
+import { usePageParam } from "../hooks/usePageParam";
 import Pagination from "../components/ui/Pagination";
-import Button from "../components/ui/Button";
+import Notice from "../components/ui/Notice";
 import InfinityIcon from "../components/icons/InfinityIcon";
 import FilterGroup from "../components/ui/FilterGroup";
 import type { FilterOption } from "../components/ui/FilterGroup";
@@ -20,8 +21,10 @@ const STATUS_OPTIONS: readonly FilterOption<CharacterStatus | undefined>[] = [
 
 export default function Personagens() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const page = Math.max(1, Number(searchParams.get("page")) || 1);
   const status = parseStatus(searchParams.get("status"));
+  const firstPage = useCharacters({ page: 1, status });
+  const totalPages = firstPage.data?.info.pages ?? 0;
+  const page = usePageParam(totalPages);
   const { data, isLoading, isError, isFetching, refetch } = useCharacters({
     page,
     status,
@@ -84,31 +87,21 @@ export default function Personagens() {
       </header>
       <main>
         {isError && (
-          <div
-            role="alert"
-            className="flex flex-wrap items-center justify-between gap-4 border border-dead text-dead p-4 mb-4"
-          >
-            <span>
-              Falha ao carregar a página {page}. A API bloqueia requisições em
-              sequência rápida.
-            </span>
-            <Button
-              variant="pager"
-              name={isFetching ? "TENTANDO…" : "TENTAR DE NOVO"}
-              disabled={isFetching}
-              onClick={() => refetch()}
-            />
-          </div>
+          <Notice
+            tone="error"
+            message={`Falha ao carregar a página ${page}. A API bloqueia requisições em sequência rápida.`}
+            actionName={isFetching ? "TENTANDO…" : "TENTAR DE NOVO"}
+            disabled={isFetching}
+            onAction={() => refetch()}
+          />
         )}
         {data?.results.length === 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-4 border border-border-strong text-muted p-4 mb-4">
-            <span>Nenhum personagem na página {page}.</span>
-            <Button
-              variant="pager"
-              name="VOLTAR PRA PÁGINA 1"
-              onClick={() => goToPage(1)}
-            />
-          </div>
+          <Notice
+            tone="muted"
+            message={`Nenhum personagem na página ${page}.`}
+            actionName="VOLTAR PRA PÁGINA 1"
+            onAction={() => goToPage(1)}
+          />
         )}
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {data?.results.map((character) => (
@@ -128,11 +121,7 @@ export default function Personagens() {
             />
           ))}
         </div>
-        <Pagination
-          page={page}
-          totalPages={data?.info.pages ?? 0}
-          onChange={goToPage}
-        />
+        <Pagination page={page} totalPages={totalPages} onChange={goToPage} />
       </main>
     </div>
   );
