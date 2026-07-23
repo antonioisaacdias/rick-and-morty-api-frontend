@@ -10,11 +10,21 @@ type EntityCardProps = {
   name: string;
   image?: string;
   rows: Row[];
+  variant?: "default" | "green";
 };
 
-export default function EntityCard({ id, name, image, rows }: EntityCardProps) {
+export default function EntityCard({
+  id,
+  name,
+  image,
+  rows,
+  variant = "default",
+}: EntityCardProps) {
+  const bg =
+    variant === "green" ? "bg-bg-green text-white" : "bg-bg-elevated";
+
   return (
-    <div className="bg-bg-elevated border border-border p-4">
+    <div className={`${bg} border border-border p-4`}>
       <div className="flex gap-4 pb-4 border-b border-border">
         {image && (
           <div className="w-17 h-17 rounded-full overflow-hidden shrink-0">
