@@ -68,6 +68,20 @@ export type EpisodeParams = {
   episode?: string;
 };
 
+export type EpisodeSeason = "S01" | "S02" | "S03" | "S04" | "S05";
+
+export const EPISODE_SEASONS: EpisodeSeason[] = [
+  "S01",
+  "S02",
+  "S03",
+  "S04",
+  "S05",
+];
+
+export function parseSeason(value: string | null): EpisodeSeason | undefined {
+  return EPISODE_SEASONS.find((season) => season === value);
+}
+
 export function fetchEpisodes(
   params: EpisodeParams = {},
 ): Promise<ApiResponse<Episode>> {
