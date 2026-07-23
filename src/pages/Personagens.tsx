@@ -6,17 +6,46 @@ import { useCharacters } from "../hooks/useCharacters";
 import Pagination from "../components/ui/Pagination";
 import Button from "../components/ui/Button";
 import InfinityIcon from "../components/icons/InfinityIcon";
+import FilterGroup from "../components/ui/FilterGroup";
+import type { FilterOption } from "../components/ui/FilterGroup";
+import { parseStatus } from "../lib/api";
+import type { CharacterStatus } from "../lib/api";
+
+const STATUS_OPTIONS: readonly FilterOption<CharacterStatus | undefined>[] = [
+  { value: undefined, label: "Todos" },
+  { value: "alive", label: "Vivo", dotClass: "bg-alive" },
+  { value: "dead", label: "Morto", dotClass: "bg-dead" },
+  { value: "unknown", label: "Desconhecido", dotClass: "bg-unknown" },
+];
 
 export default function Personagens() {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Math.max(1, Number(searchParams.get("page")) || 1);
+  const status = parseStatus(searchParams.get("status"));
   const { data, isLoading, isError, isFetching, refetch } = useCharacters({
     page,
+    status,
   });
+  const total = useCharacters({ page: 1 });
   const alive = useCharacters({ status: "alive" });
 
+  const buildParams = (
+    nextPage: number,
+    nextStatus: CharacterStatus | undefined,
+  ) => {
+    const params: Record<string, string> = { page: String(nextPage) };
+    if (nextStatus) {
+      params.status = nextStatus;
+    }
+    return params;
+  };
+
   const goToPage = (next: number) => {
-    setSearchParams({ page: String(next) });
+    setSearchParams(buildParams(next, status));
+  };
+
+  const changeStatus = (next: CharacterStatus | undefined) => {
+    setSearchParams(buildParams(1, next));
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -31,7 +60,7 @@ export default function Personagens() {
           <p>
             TOTAL
             <span className="text-accent ms-1 font-medium">
-              {data?.info.count ?? "—"}
+              {total.data?.info.count ?? "—"}
             </span>
           </p>
           <p>
@@ -46,6 +75,12 @@ export default function Personagens() {
           </p>
         </div>
         <SearchBar />
+        <FilterGroup
+          label="FILTER //"
+          options={STATUS_OPTIONS}
+          value={status}
+          onChange={changeStatus}
+        />
       </header>
       <main>
         {isError && (

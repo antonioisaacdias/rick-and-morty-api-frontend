@@ -3,6 +3,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { useCharacters } from "../hooks/useCharacters";
 import { useEpisodes } from "../hooks/useEpisodes";
 import { useLocations } from "../hooks/useLocations";
+import { parseStatus } from "../lib/api";
 
 const pad = (value: number) => String(value).padStart(2, "0");
 
@@ -12,7 +13,10 @@ const formatClock = (date: Date) =>
 export default function InfoLine() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
-  const characters = useCharacters({ page: 1 });
+  const characters = useCharacters({
+    page: 1,
+    status: parseStatus(searchParams.get("status")),
+  });
   const episodes = useEpisodes({ page: 1 });
   const locations = useLocations({ page: 1 });
   const [clock, setClock] = useState(() => formatClock(new Date()));

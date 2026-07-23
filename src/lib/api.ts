@@ -30,11 +30,19 @@ async function fetchList<T>(
   return response.json();
 }
 
+export type CharacterStatus = "alive" | "dead" | "unknown";
+
 export type CharacterParams = {
   page?: number;
   name?: string;
-  status?: string;
+  status?: CharacterStatus;
 };
+
+const CHARACTER_STATUSES: CharacterStatus[] = ["alive", "dead", "unknown"];
+
+export function parseStatus(value: string | null): CharacterStatus | undefined {
+  return CHARACTER_STATUSES.find((status) => status === value);
+}
 
 export function fetchCharacters(
   params: CharacterParams = {},
