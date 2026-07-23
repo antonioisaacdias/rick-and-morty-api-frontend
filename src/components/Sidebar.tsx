@@ -1,6 +1,13 @@
 import SidebarLink from "./SidebarLink";
+import { useCharacters } from "../hooks/useCharacters";
+import { useEpisodes } from "../hooks/useEpisodes";
+import { useLocations } from "../hooks/useLocations";
 
 export default function Sidebar() {
+  const characters = useCharacters({ page: 1 });
+  const episodes = useEpisodes({ page: 1 });
+  const locations = useLocations({ page: 1 });
+
   return (
     <aside className="flex bg-bg lg:bg-bg-elevated w-full lg:w-56 lg:shrink-0 text-text p-4 flex-col gap-3 lg:gap-6 border-b lg:border-b-0 lg:border-e border-border-strong lg:h-screen lg:sticky lg:top-0">
       <header className="flex flex-row items-center gap-4">
@@ -19,9 +26,21 @@ export default function Sidebar() {
         <p className="hidden lg:block px-2 pb-1 text-[10px] tracking-widest text-muted">
           // NAVEGAÇÃO
         </p>
-        <SidebarLink to="/personagens" count={0} name="Personagens" />
-        <SidebarLink to="/episodios" count={0} name="Episódios" />
-        <SidebarLink to="/localizacoes" count={0} name="Localizações" />
+        <SidebarLink
+          to="/personagens"
+          count={characters.data?.info.count}
+          name="Personagens"
+        />
+        <SidebarLink
+          to="/episodios"
+          count={episodes.data?.info.count}
+          name="Episódios"
+        />
+        <SidebarLink
+          to="/localizacoes"
+          count={locations.data?.info.count}
+          name="Localizações"
+        />
         <SidebarLink to="/favoritos" count={0} name="Favoritos" />
       </nav>
 
