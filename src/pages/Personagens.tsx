@@ -1,6 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import EntityCard from "../components/EntityCard";
-import StatusDot from "../components/StatusDot";
+import PersonagemCard from "../components/PersonagemCard";
 import SearchBar from "../components/SearchBar";
 import { useCharacters } from "../hooks/useCharacters";
 import { usePageParam } from "../hooks/usePageParam";
@@ -132,11 +131,14 @@ export default function Personagens() {
         )}
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {data?.results.map((character) => (
-            <EntityCard
+            <PersonagemCard
               key={character.id}
               id={character.id}
               name={character.name}
               image={character.image}
+              species={character.species}
+              origin={character.origin.name}
+              status={character.status}
               isFavorite={isFavorite(character.id)}
               onToggleFavorite={() =>
                 toggle({
@@ -148,14 +150,6 @@ export default function Personagens() {
                   status: character.status,
                 })
               }
-              rows={[
-                { label: "SPECIES", value: character.species },
-                { label: "ORIGIN", value: character.origin.name },
-                {
-                  label: "STATUS",
-                  value: <StatusDot status={character.status} />,
-                },
-              ]}
             />
           ))}
         </div>

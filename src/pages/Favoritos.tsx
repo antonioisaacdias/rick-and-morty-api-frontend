@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import EntityCard from "../components/EntityCard";
-import StatusDot from "../components/StatusDot";
+import PersonagemCard from "../components/PersonagemCard";
 import Pagination from "../components/ui/Pagination";
 import Button from "../components/ui/Button";
 import { useFavorites } from "../hooks/useFavorites";
@@ -58,21 +57,16 @@ export default function Favoritos() {
         )}
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {visible.map((character) => (
-            <EntityCard
+            <PersonagemCard
               key={character.id}
               id={character.id}
               name={character.name}
               image={character.image}
+              species={character.species}
+              origin={character.origin}
+              status={character.status}
               isFavorite
               onToggleFavorite={() => toggle(character)}
-              rows={[
-                { label: "SPECIES", value: character.species },
-                { label: "ORIGIN", value: character.origin },
-                {
-                  label: "STATUS",
-                  value: <StatusDot status={character.status} />,
-                },
-              ]}
             />
           ))}
         </div>
