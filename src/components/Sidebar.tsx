@@ -1,4 +1,5 @@
 import SidebarLink from "./SidebarLink";
+import ScrollArea from "./ui/ScrollArea";
 import { useCharacters } from "../hooks/useCharacters";
 import { useEpisodes } from "../hooks/useEpisodes";
 import { useLocations } from "../hooks/useLocations";
@@ -24,31 +25,33 @@ export default function Sidebar() {
         </div>
       </header>
 
-      <nav className="flex flex-row lg:flex-col gap-1">
-        <p className="hidden lg:block px-2 pb-1 text-[10px] tracking-widest text-muted">
-          // NAVEGAÇÃO
-        </p>
-        <SidebarLink
-          to="/personagens"
-          count={characters.data?.info.count}
-          name="Personagens"
-        />
-        <SidebarLink
-          to="/episodios"
-          count={episodes.data?.info.count}
-          name="Episódios"
-        />
-        <SidebarLink
-          to="/localizacoes"
-          count={locations.data?.info.count}
-          name="Localizações"
-        />
-        <SidebarLink
-          to="/favoritos"
-          count={favorites.length}
-          name="Favoritos"
-        />
-      </nav>
+      <ScrollArea className="min-w-0 lg:overflow-x-visible">
+        <nav className="flex flex-row lg:flex-col gap-1">
+          <p className="hidden lg:block px-2 pb-1 text-[10px] tracking-widest text-muted">
+            // NAVEGAÇÃO
+          </p>
+          <SidebarLink
+            to="/personagens"
+            count={characters.data?.info.count}
+            name="Personagens"
+          />
+          <SidebarLink
+            to="/episodios"
+            count={episodes.data?.info.count}
+            name="Episódios"
+          />
+          <SidebarLink
+            to="/localizacoes"
+            count={locations.data?.info.count}
+            name="Localizações"
+          />
+          <SidebarLink
+            to="/favoritos"
+            count={favorites.length}
+            name="Favoritos"
+          />
+        </nav>
+      </ScrollArea>
 
       <footer className="hidden lg:flex flex-col mt-auto pt-4 border-t border-border-strong text-[11px] tracking-wide">
         <div className="flex justify-between py-1 text-muted">

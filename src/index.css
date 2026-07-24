@@ -86,6 +86,15 @@ button,
   }
 }
 
+/* native scrollbar off — ScrollArea draws its own */
+.scroll-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+
 /* spinning portal logo mark */
 .portal-mark {
   border-radius: 50%;

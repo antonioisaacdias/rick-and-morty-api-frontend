@@ -12,7 +12,7 @@ export default function SidebarLink({ to, count, name }: SidebarLinkProps) {
       to={to}
       end
       className={({ isActive }) =>
-        `inline-flex items-center justify-center px-3 py-2 border-b-3 lg:border-s-3 lg:border-b-0 ${
+        `inline-flex shrink-0 whitespace-nowrap items-center justify-center px-3 py-2 border-b-3 lg:border-s-3 lg:border-b-0 ${
           isActive
             ? "shadow-primary-soft bg-primary-active border-primary text-primary"
             : "border-border hover:bg-surface-hover group text-muted"
