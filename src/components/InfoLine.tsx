@@ -21,7 +21,10 @@ export default function InfoLine() {
     page: 1,
     episode: parseSeason(searchParams.get("season")),
   });
-  const locations = useLocations({ page: 1 });
+  const locations = useLocations({
+    page: 1,
+    type: searchParams.get("type") ?? "",
+  });
   const [clock, setClock] = useState(() => formatClock(new Date()));
 
   useEffect(() => {

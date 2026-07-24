@@ -62,6 +62,39 @@ export function fetchLocations(
   return fetchList<Location>("location", params);
 }
 
+export type LocationFacets = {
+  types: string[];
+  dimensions: string[];
+};
+
+export async function fetchLocationFacets(): Promise<LocationFacets> {
+  const types = new Set<string>();
+  const dimensions = new Set<string>();
+
+  const collect = (locations: Location[]) => {
+    for (const location of locations) {
+      if (location.type) {
+        types.add(location.type);
+      }
+      if (location.dimension) {
+        dimensions.add(location.dimension);
+      }
+    }
+  };
+
+  const firstPage = await fetchLocations({ page: 1 });
+  collect(firstPage.results);
+  for (let page = 2; page <= firstPage.info.pages; page++) {
+    const nextPage = await fetchLocations({ page });
+    collect(nextPage.results);
+  }
+
+  return {
+    types: [...types].sort(),
+    dimensions: [...dimensions].sort(),
+  };
+}
+
 export type EpisodeParams = {
   page?: number;
   name?: string;
