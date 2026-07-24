@@ -4,6 +4,7 @@ import StatusDot from "../components/StatusDot";
 import SearchBar from "../components/SearchBar";
 import { useCharacters } from "../hooks/useCharacters";
 import { usePageParam } from "../hooks/usePageParam";
+import { useFavorites } from "../hooks/useFavorites";
 import Pagination from "../components/ui/Pagination";
 import Notice from "../components/ui/Notice";
 import InfinityIcon from "../components/icons/InfinityIcon";
@@ -23,6 +24,7 @@ export default function Personagens() {
   const [searchParams, setSearchParams] = useSearchParams();
   const status = parseStatus(searchParams.get("status"));
   const name = searchParams.get("name") ?? "";
+  const { isFavorite, toggle } = useFavorites();
   const firstPage = useCharacters({ page: 1, status, name });
   const totalPages = firstPage.data?.info.pages ?? 0;
   const page = usePageParam(totalPages);
@@ -135,6 +137,17 @@ export default function Personagens() {
               id={character.id}
               name={character.name}
               image={character.image}
+              isFavorite={isFavorite(character.id)}
+              onToggleFavorite={() =>
+                toggle({
+                  id: character.id,
+                  name: character.name,
+                  image: character.image,
+                  species: character.species,
+                  origin: character.origin.name,
+                  status: character.status,
+                })
+              }
               rows={[
                 { label: "SPECIES", value: character.species },
                 { label: "ORIGIN", value: character.origin.name },

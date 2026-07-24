@@ -4,6 +4,8 @@ import { useCharacters } from "../hooks/useCharacters";
 import { useEpisodes } from "../hooks/useEpisodes";
 import { useLocations } from "../hooks/useLocations";
 import { parseSeason, parseStatus } from "../lib/api";
+import { useFavorites } from "../hooks/useFavorites";
+import { FAVORITES_PAGE_SIZE } from "../lib/favorites";
 
 const pad = (value: number) => String(value).padStart(2, "0");
 
@@ -26,6 +28,7 @@ export default function InfoLine() {
     page: 1,
     type: searchParams.get("type") ?? "",
   });
+  const { favorites } = useFavorites();
   const [clock, setClock] = useState(() => formatClock(new Date()));
 
   useEffect(() => {
@@ -42,6 +45,9 @@ export default function InfoLine() {
     }
     if (pathname.startsWith("/localizacoes")) {
       return locations.data?.info.pages;
+    }
+    if (pathname.startsWith("/favoritos")) {
+      return Math.ceil(favorites.length / FAVORITES_PAGE_SIZE);
     }
     return undefined;
   };

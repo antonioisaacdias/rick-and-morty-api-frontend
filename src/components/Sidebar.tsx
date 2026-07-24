@@ -2,11 +2,13 @@ import SidebarLink from "./SidebarLink";
 import { useCharacters } from "../hooks/useCharacters";
 import { useEpisodes } from "../hooks/useEpisodes";
 import { useLocations } from "../hooks/useLocations";
+import { useFavorites } from "../hooks/useFavorites";
 
 export default function Sidebar() {
   const characters = useCharacters({ page: 1 });
   const episodes = useEpisodes({ page: 1 });
   const locations = useLocations({ page: 1 });
+  const { favorites } = useFavorites();
 
   return (
     <aside className="flex bg-bg lg:bg-bg-elevated w-full lg:w-56 lg:shrink-0 text-text p-4 flex-col gap-3 lg:gap-6 border-b lg:border-b-0 lg:border-e border-border-strong lg:h-screen lg:sticky lg:top-0">
@@ -41,7 +43,11 @@ export default function Sidebar() {
           count={locations.data?.info.count}
           name="Localizações"
         />
-        <SidebarLink to="/favoritos" count={0} name="Favoritos" />
+        <SidebarLink
+          to="/favoritos"
+          count={favorites.length}
+          name="Favoritos"
+        />
       </nav>
 
       <footer className="hidden lg:flex flex-col mt-auto pt-4 border-t border-border-strong text-[11px] tracking-wide">
