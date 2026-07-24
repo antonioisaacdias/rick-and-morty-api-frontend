@@ -23,14 +23,14 @@ Interface com tema *Portal Gun HUD* — visual de terminal/registro dimensional,
 
 ## Requisitos técnicos
 
-- [ ] `useState` — busca, filtros, paginação, loading e favoritos
-- [ ] `useEffect` — buscar dados ao montar e ao mudar filtro/página
-- [ ] `useContext` — favoritos compartilhados entre páginas
-- [ ] `useRef` — foco automático no campo de busca de Personagens
-- [ ] **React Router** — navegação entre as 4 páginas
-- [ ] Componente `PersonagemCard` recebendo dados via props
-- [ ] Consumo de API com `fetch` + `async/await`
-- [ ] Paginação nas três páginas de listagem
+- [x] `useState` — termo de busca (`SearchBar`), dropdown de tipos (`Combobox`), confirmação de limpeza (`Favoritos`), relógio (`InfoLine`)
+- [x] `useEffect` — foco do dropdown, clique fora, relógio, sincronia entre abas e correção da página na URL
+- [x] `useContext` — favoritos compartilhados via `FavoritesProvider` (`src/context/`)
+- [x] `useRef` — foco automático no campo de busca de Personagens
+- [x] **React Router** — navegação entre as 4 páginas
+- [x] Componente `PersonagemCard` recebendo dados via props
+- [x] Consumo de API com `fetch` + `async/await` (`src/lib/api.ts`)
+- [x] Paginação nas três páginas de listagem (e também em Favoritos)
 
 ## Rodando localmente
 
@@ -48,16 +48,60 @@ Abre em `http://localhost:5173`.
 | `npm run preview` | Serve o build localmente |
 | `npm run lint` | ESLint |
 
+## Rodando com Docker
+
+Não precisa de Node instalado. Antes de qualquer um dos dois modos, crie o `.env`:
+
+```bash
+cp .env.example .env
+```
+
+O arquivo tem uma variável só:
+
+```bash
+# .env
+VITE_API_URL=https://rickandmortyapi.com/api
+```
+
+A API é pública e não pede chave, então esse valor serve como está — o `.env` existe para trocar a URL (um mock local, por exemplo) sem mexer no código. Ele está no `.gitignore`; o versionado é o `.env.example`.
+
+**Desenvolvimento** — Vite com hot reload, o código da máquina é montado no container:
+
+```bash
+docker compose -f docker-compose.dev.yml up
+```
+
+Abre em `http://localhost:5173`. Editar um arquivo recarrega o navegador (`VITE_USE_POLLING` já vem ligado, porque o hot reload não enxerga mudança em volume montado sem isso).
+
+**Produção** — build do Vite servido por nginx:
+
+```bash
+docker compose up --build
+```
+
+Abre em `http://localhost:8080`.
+
+| Comando | Faz |
+| --- | --- |
+| `docker compose -f docker-compose.dev.yml up` | Dev com hot reload em `:5173` |
+| `docker compose up --build` | Build de produção + nginx em `:8080` |
+| `docker compose down` | Derruba os containers |
+
+O `Dockerfile` tem três estágios: `dev` (Vite), `build` (gera o `dist/`) e o final com nginx. O `VITE_API_URL` entra como build arg no estágio de build — variável do Vite é embutida no bundle, então mudar a API exige rebuild da imagem, não só reiniciar o container.
+
 ## Estrutura
 
 ```
 src/
-├── components/   # componentes reutilizáveis (Sidebar, PersonagemCard…)
+├── components/   # Sidebar, InfoLine, PersonagemCard, EntityCard
+│   ├── icons/    # ícones em SVG inline
+│   └── ui/       # Button, Input, Pagination, FilterGroup, Combobox, Notice
+├── context/      # FavoritesProvider + contexto de favoritos
 ├── pages/        # Personagens, Episodios, Localizacoes, Favoritos
-├── hooks/        # hooks custom
-├── lib/          # helpers da API e utilitários
+├── hooks/        # queries da API, favoritos e página na URL
+├── lib/          # fetch da API e store de favoritos
 ├── App.tsx       # layout + rotas
-├── main.tsx      # entrypoint
+├── main.tsx      # entrypoint + providers
 └── index.css     # Tailwind + tema
 ```
 
