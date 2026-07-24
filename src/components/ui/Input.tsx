@@ -5,6 +5,7 @@ type InputProps = {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  inputRef?: React.Ref<HTMLInputElement>;
 };
 
 export default function Input({
@@ -14,6 +15,7 @@ export default function Input({
   value,
   onChange,
   className,
+  inputRef,
 }: InputProps) {
   return (
     <div className="relative p-4 border-b-2 border-s-2 border-t-2 w-full border-border-strong bg-bg-elevated flex items-center gap-2">
@@ -24,6 +26,7 @@ export default function Input({
       )}
       {label && <label className="text-primary">{label}</label>}
       <input
+        ref={inputRef}
         type="text"
         placeholder={placeholder}
         value={value}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
@@ -16,6 +16,11 @@ export default function SearchBar({
 }: SearchBarProps) {
   const [term, setTerm] = useState(value);
   const [lastValue, setLastValue] = useState(value);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   if (value !== lastValue) {
     setLastValue(value);
@@ -33,6 +38,7 @@ export default function SearchBar({
       className="flex flex-row flex-nowrap focus-within:ring-2 focus-within:ring-primary focus-within:shadow-primary"
     >
       <Input
+        inputRef={inputRef}
         label="SCAN>"
         placeholder={placeholder}
         value={term}
