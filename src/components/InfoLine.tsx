@@ -16,6 +16,7 @@ export default function InfoLine() {
   const characters = useCharacters({
     page: 1,
     status: parseStatus(searchParams.get("status")),
+    name: searchParams.get("name") ?? "",
   });
   const episodes = useEpisodes({
     page: 1,

@@ -22,12 +22,14 @@ const STATUS_OPTIONS: readonly FilterOption<CharacterStatus | undefined>[] = [
 export default function Personagens() {
   const [searchParams, setSearchParams] = useSearchParams();
   const status = parseStatus(searchParams.get("status"));
-  const firstPage = useCharacters({ page: 1, status });
+  const name = searchParams.get("name") ?? "";
+  const firstPage = useCharacters({ page: 1, status, name });
   const totalPages = firstPage.data?.info.pages ?? 0;
   const page = usePageParam(totalPages);
   const { data, isLoading, isError, isFetching, refetch } = useCharacters({
     page,
     status,
+    name,
   });
   const total = useCharacters({ page: 1 });
   const alive = useCharacters({ status: "alive" });
@@ -35,20 +37,43 @@ export default function Personagens() {
   const buildParams = (
     nextPage: number,
     nextStatus: CharacterStatus | undefined,
+    nextName: string,
   ) => {
     const params: Record<string, string> = { page: String(nextPage) };
     if (nextStatus) {
       params.status = nextStatus;
     }
+    if (nextName) {
+      params.name = nextName;
+    }
     return params;
   };
 
   const goToPage = (next: number) => {
-    setSearchParams(buildParams(next, status));
+    setSearchParams(buildParams(next, status, name));
   };
 
   const changeStatus = (next: CharacterStatus | undefined) => {
-    setSearchParams(buildParams(1, next));
+    setSearchParams(buildParams(1, next, name));
+  };
+
+  const search = (term: string) => {
+    setSearchParams(buildParams(1, status, term));
+  };
+
+  const hasFilters = Boolean(name || status);
+
+  const buildEmptyMessage = () => {
+    if (name && status) {
+      return `Nenhum personagem com "${name}" e status ${status}.`;
+    }
+    if (name) {
+      return `Nenhum personagem com "${name}".`;
+    }
+    if (status) {
+      return `Nenhum personagem com status ${status}.`;
+    }
+    return `Nenhum personagem na página ${page}.`;
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -77,7 +102,7 @@ export default function Personagens() {
             <InfinityIcon className="text-accent ms-1 inline-block h-5 w-5 align-middle" />
           </p>
         </div>
-        <SearchBar />
+        <SearchBar value={name} onSearch={search} />
         <FilterGroup
           label="FILTER //"
           options={STATUS_OPTIONS}
@@ -98,9 +123,9 @@ export default function Personagens() {
         {data?.results.length === 0 && (
           <Notice
             tone="muted"
-            message={`Nenhum personagem na página ${page}.`}
-            actionName="VOLTAR PRA PÁGINA 1"
-            onAction={() => goToPage(1)}
+            message={buildEmptyMessage()}
+            actionName={hasFilters ? "LIMPAR FILTROS" : "VOLTAR PRA PÁGINA 1"}
+            onAction={() => setSearchParams(buildParams(1, undefined, ""))}
           />
         )}
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

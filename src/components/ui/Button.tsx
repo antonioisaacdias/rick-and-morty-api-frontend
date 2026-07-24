@@ -4,6 +4,7 @@ type ButtonProps = {
   variant?: "primary" | "pager";
   active?: boolean;
   disabled?: boolean;
+  type?: "button" | "submit";
 };
 
 export default function Button({
@@ -12,6 +13,7 @@ export default function Button({
   variant = "primary",
   active = false,
   disabled = false,
+  type = "button",
 }: ButtonProps) {
   const pagerBase = "min-w-10 h-10 px-3 border text-[13px] tracking-[0.05em]";
 
@@ -27,7 +29,7 @@ export default function Button({
 
   return (
     <button
-      type="button"
+      type={type}
       className={`outline-none cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${buildStyle()}`}
       onClick={onClick}
       disabled={disabled}
